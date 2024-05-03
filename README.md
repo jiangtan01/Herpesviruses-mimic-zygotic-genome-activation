@@ -22,7 +22,7 @@ Accompanying sequencing data is available in GEO of the paper.
 * CHIP-seq analysis
 * CUT&Tag analysis
 * Transposon Quantification
-* single cell RNA-seq analysis of cancer patients data
+* single cell RNA-seq analysis
 
 
 

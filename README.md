@@ -1,18 +1,28 @@
-##[Herpesviruses mimic zygotic genome activation to promote viral replication]
+# Herpesviruses mimic zygotic genome activation
 
-This repository includes workflows and scripts used for the paper: Herpesviruses mimic zygotic genome activation to promote viral replication.
+This repository includes scripts used for the paper: 
 
-Accompanying sequencing data is available in the paper.
+```diff 
+- Herpesviruses mimic zygotic genome activation to promote viral replication
+```
 
-The analysis can be reran by recreating the specific environments and genome references. To do this make sure that conda is installed. Additionaly, mamba is required as well (in your base environment).
 
-overview
+<img width="595" alt="image" src="https://github.com/jiangtan01/Herpesviruses-mimic-zygotic-genome-activation-to-promote-viral-replication/assets/67500766/e82a2419-6969-4387-b935-7a7c92958f88">
 
- RNA-Seq analysis
- CHIP-seq analysis
- CUT&Tag analysis
- Transposon Quantification
- single cell RNA-seq analysis of cancer patients data
+
+
+
+Accompanying sequencing data is available in GEO of the paper.
+
+
+
+## overview
+
+* RNA-Seq analysis
+* CHIP-seq analysis
+* CUT&Tag analysis
+* Transposon Quantification
+* single cell RNA-seq analysis of cancer patients data
 
 
 

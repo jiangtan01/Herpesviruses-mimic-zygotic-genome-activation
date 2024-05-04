@@ -12,7 +12,7 @@ This repository includes scripts used for the paper:
 
 
 
-Accompanying sequencing data is available in GEO of the paper.
+Accompanying sequencing data is available in the GEO of this paper.
 
 
 

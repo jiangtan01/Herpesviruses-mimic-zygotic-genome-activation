@@ -1,15 +1,15 @@
 #############this scripts used for the singele cell RNAseq data of virus related cancer patients analysis#################
-########################################################
-#####################MCV patients analysis##############
-########################################################
-########## mapping by snakepipes###############
+
+#############MCV patients analysis##############
+
+############# mapping by snakepipes#############
 cd /path/to/data/ && conda activate snakePipes/2.7.2
+
 scRNAseq -j 20 -i /path/to/data/ -o snakepipes.out --myKit 10Xv3 --STARsoloCoords 1,16,17,12 hg38_MCV  
 
-########### downstream analysis###################
-#############################################
+########### downstream analysis##############
+
 #############seurat analysis ################
-#############################################
 prewd="/path/to/snakepipes.out/"
 
 library(dplyr)

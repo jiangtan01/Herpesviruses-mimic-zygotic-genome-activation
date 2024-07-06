@@ -1,1 +1,123 @@
 #############this scripts used for the singele cell RNAseq data of virus related cancer patients analysis#################
+########################################################
+#####################MCV patients analysis##############
+########################################################
+########## mapping by snakepipes###############
+cd /path/to/data/ && conda activate snakePipes/2.7.2
+scRNAseq -j 20 -i /path/to/data/ -o snakepipes.out --myKit 10Xv3 --STARsoloCoords 1,16,17,12 hg38_MCV  
+
+########### downstream analysis###################
+#############################################
+#############seurat analysis ################
+#############################################
+prewd="/path/to/snakepipes.out/"
+
+library(dplyr)
+library(Seurat)
+library(data.table)
+library(foreach)
+library(GenomicRanges)
+library(doParallel)
+library(ggpubr)
+library(gridExtra)
+library(Signac)
+library(SeuratWrappers)
+library(monocle3)
+library(cicero)
+library(Matrix)
+library(ggplot2)
+library(patchwork)
+library(future)
+library(stringr)
+library(DESeq2)
+library(rtracklayer)
+library(SeuratDisk)
+
+# create a Seurat object
+p1_object <- Read10X("data.dir ="/path/to/snakepipes.out/STARsolo/p1")
+p1_object = CreateSeuratObject(counts = p1_object, project = "p1", min.cells = 3, min.features = 200)
+
+p2_object <- Read10X("data.dir ="/path/to/snakepipes.out/STARsolo/p2")
+p2_object = CreateSeuratObject(counts = p2_object, project = "p2", min.cells = 3, min.features = 200)
+
+p3_object <- Read10X("data.dir ="/path/to/snakepipes.out/STARsolo/p3")
+p3_object = CreateSeuratObject(counts = p3_object, project = "p3", min.cells = 3, min.features = 200)
+
+p4_object <- Read10X("data.dir ="/path/to/snakepipes.out/STARsolo/p4")
+p4_object = CreateSeuratObject(counts = p4_object, project = "p4", min.cells = 3, min.features = 200)
+
+p5_object <- Read10X("data.dir ="/path/to/snakepipes.out/STARsolo/p5")
+p5_object = CreateSeuratObject(counts = p5_object, project = "p5", min.cells = 3, min.features = 200)
+
+p6_object <- Read10X("data.dir ="/path/to/snakepipes.out/STARsolo/p6")
+p6_object = CreateSeuratObject(counts = p6_object, project = "p6", min.cells = 3, min.features = 200)
+
+########merge 6 MCV postive patients object############
+All_merged_object <- merge(p1_object, y = c(p2_object,p3_object,p4_object,p5_object,p6_object), add.cell.ids = c("p1","p2","p3","p4","p5","p6"), project = "pos")
+
+All_merged_object[["percent.mt"]] <- PercentageFeatureSet(All_merged_object, pattern = "^MT-")
+
+all.objects.merge <- subset(all.objects.merge, subset = nFeature_RNA > 200 & nFeature_RNA < 12000 & percent.mt < 25)
+
+All_merged_object <- NormalizeData(All_merged_object, normalization.method = "LogNormalize", scale.factor = 10000)
+
+All_merged_object <- FindVariableFeatures(All_merged_object, selection.method = "vst", nfeatures = 2000)
+
+all.genes <- rownames(All_merged_object)
+
+All_merged_object <- ScaleData(All_merged_object, features = all.genes)
+
+All_merged_object <- RunPCA(All_merged_object, features = VariableFeatures(object = All_merged_object))
+
+All_merged_object <- JackStraw(All_merged_object, num.replicate = 100)
+
+All_merged_object <- ScoreJackStraw(All_merged_object, dims = 1:20)
+
+All_merged_object <- FindNeighbors(All_merged_object, dims = 1:10)
+
+All_merged_object <- FindClusters(All_merged_object, resolution = 0.1)
+
+All_merged_object <- RunUMAP(All_merged_object, dims = 1:10)
+
+All_merged_object$orig.ident <- NULL
+
+All_merged_object$orig.ident <- gsub("_.*","",rownames(All_merged_object[[]]))
+
+######### cell types#########
+#########singleR#################
+library(SingleR)
+library(celldex)
+hpca.se <- HumanPrimaryCellAtlasData()
+pred.hesc <- SingleR(test = as.SingleCellExperiment(All_merged_object), ref = hpca.se, labels = hpca.se$label.main)
+All_merged_object$singleR_labels <- pred.hesc$labels
+
+##########add cell type##############
+new.cluster.ids <- c("Astrocyte","Neurons","T cells","Neurons","B cells","T cells","Neurons","Endothelial","Monocyte","B cells")
+names(new.cluster.ids) <- levels(All_merged_object)
+All_merged_object <- RenameIdents(All_merged_object, new.cluster.ids)
+
+###########plot###########
+p1=DimPlot(All_merged_object, reduction = "umap",repel = FALSE) 
+p1=LabelClusters(plot = p1, id = "ident")+ NoLegend()
+ggsave(plot = p1, filename = file.path(prewd, "Output", paste0("label.pdf")), dpi = 600, width=4.5,height =3, useDingbats = TRUE)
+
+###########merge all MCV reads #############
+all.objects.merge$MCV= rowSums(FetchData(object = all.objects.merge, vars = c("ADE45414", "ADE45415","ADE45416","ADE45416.1","ADE45417")))
+p1=FeaturePlot(All_merged_object, features = c("MCV"), order=TRUE, pt.size = 0.1, max.cutoff=0.5,label = FALSE,reduction="umap",raster=FALSE)
+ggsave(plot = p1, filename = file.path(prewd, "Output", paste0("pos_MCV.pdf")), dpi = 600, width=4.5,height =3, useDingbats = TRUE)
+
+#########merge all DUX4 targets##########
+All_merged_object$allDUX4target= rowSums(FetchData(object = All_merged_object, vars = c("PITX1","DUX4","FRG2B","FRG2C","TRIM72","DUXA", "ZSCAN4", "TRIM43","TRIM48","TRIM49C","TRIM49B", "TRIM49","PRAMEF2","ZSCAN5C","TRIM43B")))
+p1=FeaturePlot(All_merged_object, features = c("allDUX4target"), order=TRUE, pt.size = 0.1,max.cutoff=1.5,label = FALSE,reduction="umap",cols = c("#dddddd", "#fd3a69"),raster=FALSE)
+ggsave(plot = p1, filename = file.path(prewd, "Output", paste0("pos_allDUX4target.pdf")), dpi = 600, width=4.5,height =3, useDingbats = TRUE)
+
+########patient vln plot##########
+my_comparisons <- list( c("Astrocyte", "Neurons"), c("T cells", "Neurons"), c("B cells", "Neurons"), c("Endothelial", "Neurons"), c("Monocyte", "Neurons"))
+p1=VlnPlot(All_merged_object, features = "MCV") + RotatedAxis()+ theme(legend.position = 'none')+  stat_compare_means(comparisons = my_comparisons, label = "p.signif",label.y = c(4,4.4,4.8,5.2,5.6,6))+ylim(0,6)
+ggsave(plot = p1, filename = file.path(prewd, "Output", paste0("MCV_vln.pdf")), dpi = 600, width=5,height =5, useDingbats = TRUE)
+p1=VlnPlot(All_merged_object, features = "allDUX4target") + RotatedAxis()+ theme(legend.position = 'none')+  stat_compare_means(comparisons = my_comparisons, label = "p.signif",label.y = c(16.5,18,19.5,21,22.5,24))+ylim(0,24)
+ggsave(plot = p1, filename = file.path(prewd, "Output", paste0("allDUX4target_vln.pdf")), dpi = 600, width=5,height =5, useDingbats = TRUE)
+
+
+########## the EBV and HPV patient data did in a same way#############
+

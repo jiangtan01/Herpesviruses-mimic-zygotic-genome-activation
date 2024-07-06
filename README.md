@@ -20,8 +20,7 @@ Accompanying sequencing data is available in the GEO of this paper.
 
 * RNA-Seq analysis
 * CHIP-seq analysis
-* CUT&Tag analysis
-* Transposon Quantification
+* CUT&Run analysis
 * single cell RNA-seq analysis
 
 

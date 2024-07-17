@@ -1,11 +1,11 @@
 ############the CHIP-seq of DUX4 and histone markers analyzed by snakepipes#############
-#####load snakepipe 
+#####load snakepipes####### 
 module load snakePipes/2.2.3 &&cd /path/to/data/
 
-######DNA mapping 
+######DNA mapping####### 
 DNA-mapping -i /path/to/data/ -o /path/to/snakepipes.out -j 20 --DAG --fastqc --dedup --properPairs --mapq 3 --bwBinSize 25 hg38
 
-######peak calling
+######peak calling#######
 ChIP-seq -d /path/to/snakepipes.out -j 20 hg38 /path/to/chip_config.yaml
 
 ######downstream analysis############

@@ -1,1 +1,18 @@
+############the CHIP-seq of DUX4 and histone markers analyzed by snakepipes#############
+#####load snakepipe 
+module load snakePipes/2.2.3 &&cd /path/to/data/
+
+######DNA mapping 
+DNA-mapping -i /path/to/data/ -o /path/to/snakepipes.out -j 20 --DAG --fastqc --dedup --properPairs --mapq 3 --bwBinSize 25 hg38
+
+######peak calling
+ChIP-seq -d /path/to/snakepipes.out -j 20 hg38 /path/to/chip_config.yaml
+
+######downstream analysis############
+######DUX4 binding profile analysis######
+#####prepare merged bidwig files########
+module load WiggleTools/1.2.2 && cd /path/to/data/
+chromsize=/path/to/GRCh38_ensembl/genome_fasta/genome.chrom.sizes
+
+
 

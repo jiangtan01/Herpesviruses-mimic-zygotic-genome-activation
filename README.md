@@ -18,7 +18,7 @@ Accompanying sequencing data is available in the GEO of this paper.
 
 ## overview
 
-* RNA-Seq analysis
+* Bulk RNA-Seq analysis
 * CHIP-seq analysis
 * CUT&Run analysis
 * single cell RNA-seq analysis

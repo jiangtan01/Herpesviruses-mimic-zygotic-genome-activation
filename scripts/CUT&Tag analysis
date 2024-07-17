@@ -1,3 +1,4 @@
+#########for the DUX4 binding motif analysis#############
 #Libraries to load
 library(ChIPseeker)
 library(clusterProfiler)
@@ -8,23 +9,15 @@ library(DNAshapeR)
 library(BSgenome)
 
 #Load genome
-
 genome <- library(BSgenome.Hsapiens.UCSC.hg19)
 genome <- getBSgenome("BSgenome.Hsapiens.UCSC.hg19")
 
-
 #Load Data
-
 peak2h <- read.table("HEK_DUX4_2h_br1_sorted_bam_peaks.xls", header = T)
-
 peak4h <- read.table("HEK_DUX4_4h_br1_sorted_bam_peaks.xls", header = T)
-
 peak6h <- read.table("HEK_DUX4_6h_br1_sorted_bam_peaks.xls", header = T)
-
 peak8h <- read.table("HEK_DUX4_8h_br1_sorted_bam_peaks.xls", header = T
-
 peak10h <- read.table("HEK_DUX4_10h_br1_sorted_bam_peaks.xls", header = T)
-
 peak12h <- read.table("Renamed_HEK_DUX4_12h_br1_sorted_bam_peaks.xls", header = T)
 
 #combine all in one
@@ -38,11 +31,8 @@ chromosome_to_remove <- "chrHSV1"
 gr_filtered <- subset(all, seqnames(all) != chromosome_to_remove)
 gr_filtered <- keepSeqlevels(gr_filtered, setdiff(seqlevels(gr_filtered), chromosome_to_remove))
 seqlevels(gr_filtered)
-
-
 allred <- reduce(gr_filtered)
 allcenter = resize(allred, width = 100, fix='center')
-
 export.bed(allcenter,con='allcenter.bed')
 
 #Get Fasta-File

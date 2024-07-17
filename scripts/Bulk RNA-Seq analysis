@@ -2,16 +2,13 @@
 
 ##############PAA treatment and HSV1 infection analysis####################
 ################HSV1 GFP mapping#############
-cd /data/akhtar/suny/HSV1/TE_project/new_RNAseq/PAA_HSV1/ && conda activate /home/suny/mambaforge/envs/snakepipes2.7.2
-
-mRNA-seq -i /data/akhtar/suny/HSV1/TE_project/new_RNAseq/PAA_HSV1/data/ -o mRNA.all.snakepipes.file.out --sampleSheet sampleInfo.8hpi.tsv -j 20 hg38_HSV1_GFP_1107
-
-
+cd /path/to/data/ && conda activate /home/suny/mambaforge/envs/snakepipes2.7.2
+mRNA-seq -i /path/to/data/ -o mRNA.all.snakepipes.file.out --sampleSheet sampleInfo.8hpi.tsv -j 20 hg38_HSV1_GFP_1107
 
 ##############DUX4 target and HSV1 genes heatmap#######################
 DUX4_target=rev(c("GADD45G","DUX4","DUXA","ZSCAN4","ZSCAN5C","TRIM43","TRIM43B","TRIM48","TRIM49","TRIM49B","TRIM49C","TRIM72","FRG2B","FRG2C","RFPL4A","RFPL4AL1","PRAMEF2","KLKP1")) 
 ############ normalization counts ##############
-prewd="/data/akhtar/suny/HSV1/TE_project/new_RNAseq/PAA_HSV1/mRNA.all.snakepipes.file.out/DESeq2_sampleInfo.8hpi"
+prewd="/path/to/mRNA.all.snakepipes.file.out/DESeq2_sampleInfo.8hpi"
 DUX4_target_sub = read.delim(file = file.path(prewd,"DEseq_basic_DEresults.tsv"), stringsAsFactors = FALSE, header=TRUE,row.names=1)
 DUX4_target_sub = subset(DUX4_target_sub,DUX4_target_sub$external_gene_name%in%DUX4_target)
 
@@ -27,7 +24,7 @@ dux4oe_counts=dux4oe_counts[,6:7]
 ###########HSV1 genes#################
 HSV1genes=rev(c("HSV1_RS1","HSV1_RS1.1","HSV1_RL2","HSV1_RL2.1","HSV1_UL54")) 
 ############ normalization counts ##############
-prewd="/data/akhtar/suny/HSV1/TE_project/new_RNAseq/PAA_HSV1/mRNA.all.snakepipes.file.out/DESeq2_sampleInfo.8hpi"
+prewd="/path/to/mRNA.all.snakepipes.file.out/DESeq2_sampleInfo.8hpi"
 HSV1_sub = read.delim(file = file.path(prewd,"DEseq_basic_DEresults.tsv"), stringsAsFactors = FALSE, header=TRUE,row.names=1)
 HSV1_sub = subset(HSV1_sub,HSV1_sub$external_gene_name%in%HSV1genes)
 
@@ -42,12 +39,10 @@ HSV1_counts.merge= data.frame(HSV1_genes = c('ICP0', 'ICP4'),
                               HSV1_8hpi = c(23.08+38.4, 4.73+6.62),
                               PAA_HSV1_8hpi = c(0.835+2.088, 0.418+2.227))
 
-
 rownames(HSV1_counts.merge) = HSV1_counts.merge$HSV1_genes
 HSV1_counts.merge = HSV1_counts.merge[,2:3]
 
 dux4oe_counts.HSV1merge = rbind(dux4oe_counts,HSV1_counts.merge)
-
 
 dux4oe_counts.HSV1merge <- log2(dux4oe_counts.HSV1merge + 1)
 colnames(dux4oe_counts.HSV1merge)=c("HSV1_8hpi","PAA_HSV1_8hpi")
@@ -68,15 +63,10 @@ p1=pheatmap(dux4oe_counts.HSV1merge,
             legend = TRUE, 
             show_rownames = TRUE)
 
-# Save the heatmap to an image file
-ggsave("/data/akhtar/suny/HSV1/TE_project/new_RNAseq/PAA_HSV1/Output/DUX4target_log.heatmap.pdf", plot = p1, width = 2.5, height = 7)
-
-
-
 ################EBV INFECTION DUX4 TARGET HEATMAP############
 DUX4_target=rev(c("GADD45G","DUX4","DUXA","ZSCAN4","ZSCAN5C","TRIM43","TRIM43B","TRIM48","TRIM49","TRIM49B","TRIM49C","TRIM72","FRG2B","FRG2C","RFPL4A","RFPL4AL1","PRAMEF2","KLKP1")) 
 ############ normalization counts ##############
-prewd="/data/akhtar/suny/HSV1/TE_project/public_BulkRNA_EBV2/noncoding.rnaseq.files.out/DESeq2_public_EBV2.2dpi"
+prewd="/path/to/data/"
 DUX4_target_sub = read.delim(file = file.path(prewd,"genes_DEresults.tsv"), stringsAsFactors = FALSE, header=TRUE,row.names=1)
 DUX4_target_sub = subset(DUX4_target_sub,DUX4_target_sub$external_gene_name%in%DUX4_target)
 
@@ -108,15 +98,10 @@ p1=pheatmap(dux4oe_counts,
             legend = TRUE, 
             show_rownames = TRUE)
 
-# Save the heatmap to an image file
-ggsave("/data/akhtar/suny/HSV1/TE_project/public_BulkRNA_EBV2/Output/EBV_2dpi_DUX4target_log.heatmap.pdf", plot = p1, width = 2.5, height = 6)
-
-
-
 ################KSHV INFECTION DUX4 TARGET HEATMAP############
   DUX4_target=rev(c("GADD45G","DUX4","DUXA","ZSCAN4","ZSCAN5C","TRIM43","TRIM43B","TRIM48","TRIM49","TRIM49B","TRIM49C","TRIM72","FRG2B","FRG2C","RFPL4A","RFPL4AL1","PRAMEF2","KLKP1")) 
   ############ normalization counts ##############
-  prewd="/data/akhtar/suny/HSV1/TE_project/public_BulkRNA_KSHV/noncoding.rnaseq.files.out/DESeq2_public_KSHV.KSHV_24hpi"
+  prewd="/path/to/data/"
   DUX4_target_sub = read.delim(file = file.path(prewd,"genes_DEresults.tsv"), stringsAsFactors = FALSE, header=TRUE,row.names=1)
   DUX4_target_sub = subset(DUX4_target_sub,DUX4_target_sub$external_gene_name%in%DUX4_target)
   
@@ -147,7 +132,3 @@ p1=pheatmap(dux4oe_counts,
             fontsize_col = 18, 
             legend = TRUE, 
             show_rownames = TRUE)
-
-# Save the heatmap to an image file
-ggsave("/data/akhtar/suny/HSV1/TE_project/public_BulkRNA_KSHV/Output/KSHV_24hpi_DUX4target_log.heatmap.pdf", plot = p1, width = 2.5, height = 6)
-

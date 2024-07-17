@@ -2,7 +2,7 @@
 
 ##############PAA treatment and HSV1 infection analysis####################
 ################HSV1 GFP mapping#############
-cd /path/to/data/ && conda activate /home/suny/mambaforge/envs/snakepipes2.7.2
+cd /path/to/data/ && module load snakepipes2.7.2
 mRNA-seq -i /path/to/data/ -o mRNA.all.snakepipes.file.out --sampleSheet sampleInfo.8hpi.tsv -j 20 hg38_HSV1_GFP_1107
 
 ##############DUX4 target and HSV1 genes heatmap#######################

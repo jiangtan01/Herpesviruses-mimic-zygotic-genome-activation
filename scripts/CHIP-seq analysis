@@ -14,5 +14,50 @@ ChIP-seq -d /path/to/snakepipes.out -j 20 hg38 /path/to/chip_config.yaml
 module load WiggleTools/1.2.2 && cd /path/to/data/
 chromsize=/path/to/GRCh38_ensembl/genome_fasta/genome.chrom.sizes
 
+#####merged ATAC bigwig files######
+SlurmEasy -t 10 "wiggletools mean ATAC_HFF_mock* | wigToBigWig stdin $chromsize ATAC_HFF_mock_merged.bw"
+SlurmEasy -t 10 "wiggletools mean ATAC_HFF_HSV1_1hpi* | wigToBigWig stdin $chromsize ATAC_HFF_HSV1_1hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean ATAC_HFF_HSV1_2hpi* | wigToBigWig stdin $chromsize ATAC_HFF_HSV1_2hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean ATAC_HFF_HSV1_4hpi* | wigToBigWig stdin $chromsize ATAC_HFF_HSV1_4hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean ATAC_HFF_HSV1_6hpi* | wigToBigWig stdin $chromsize ATAC_HFF_HSV1_6hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean ATAC_HFF_HSV1_8hpi* | wigToBigWig stdin $chromsize ATAC_HFF_HSV1_8hpi_merged.bw"
+
+#####merged histone marker files######
+#########merge #############
+SlurmEasy -t 10 "wiggletools mean H3K27ac_HSV1_1hpi* | wigToBigWig stdin $chromsize H3K27ac_HSV1_1hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K27ac_HSV1_24hpi* | wigToBigWig stdin $chromsize H3K27ac_HSV1_24hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K27ac_HSV1_2hpi* | wigToBigWig stdin $chromsize H3K27ac_HSV1_2hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K27ac_HSV1_4hpi* | wigToBigWig stdin $chromsize H3K27ac_HSV1_4hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K27ac_HSV1_8hpi* | wigToBigWig stdin $chromsize H3K27ac_HSV1_8hpi_merged.bw"
+
+SlurmEasy -t 10 "wiggletools mean H3K27me3_HSV1_1hpi* | wigToBigWig stdin $chromsize H3K27me3_HSV1_1hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K27me3_HSV1_24hpi* | wigToBigWig stdin $chromsize H3K27me3_HSV1_24hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K27me3_HSV1_2hpi* | wigToBigWig stdin $chromsize H3K27me3_HSV1_2hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K27me3_HSV1_4hpi* | wigToBigWig stdin $chromsize H3K27me3_HSV1_4hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K27me3_HSV1_8hpi* | wigToBigWig stdin $chromsize H3K27me3_HSV1_8hpi_merged.bw"
+
+SlurmEasy -t 10 "wiggletools mean H3K4me3_HSV1_1hpi* | wigToBigWig stdin $chromsize H3K4me3_HSV1_1hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K4me3_HSV1_24hpi* | wigToBigWig stdin $chromsize H3K4me3_HSV1_24hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K4me3_HSV1_2hpi* | wigToBigWig stdin $chromsize H3K4me3_HSV1_2hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K4me3_HSV1_4hpi* | wigToBigWig stdin $chromsize H3K4me3_HSV1_4hpi_merged.bw"
+SlurmEasy -t 10 "wiggletools mean H3K4me3_HSV1_8hpi* | wigToBigWig stdin $chromsize H3K4me3_HSV1_8hpi_merged.bw"
+
+######make the profiles##########
+module load deeptools &&cd /path/to/data/
+
+########atac########
+SlurmEasy -t 10 "computeMatrix reference-point -R /data/akhtar/suny/HSV1/TE_project/HSV1/GSE174759/CHIP_seq/new_14h.snakepipes.out/MACS2/SRR14605772_DUX4CHIP_14hpi_yes.filtered.BAM_summits.bed -S /data/akhtar/suny/HSV1/TE_project/HSV1/ATAC_hff_12468hpi/human_mapping/deepTools_ATAC/bamCompare/ATAC_HFF_mock_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/ATAC_hff_12468hpi/human_mapping/deepTools_ATAC/bamCompare/ATAC_HFF_HSV1_1hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/ATAC_hff_12468hpi/human_mapping/deepTools_ATAC/bamCompare/ATAC_HFF_HSV1_2hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/ATAC_hff_12468hpi/human_mapping/deepTools_ATAC/bamCompare/ATAC_HFF_HSV1_4hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/ATAC_hff_12468hpi/human_mapping/deepTools_ATAC/bamCompare/ATAC_HFF_HSV1_8hpi_merged.bw --missingDataAsZero --skipZeros -p 50 -a 500 -b 500 -out HSV1_DUX4binding_atac.gz -bs 5 && plotProfile -m HSV1_DUX4binding_atac.gz -o HSV1_DUX4binding_atac.pdf --samplesLabel mock 1hpi 2hpi 4hpi 8hpi --regionsLabel DUX4_binding --perGroup --legendLocation upper-left --plotWidth 5 --plotHeight 15 --colors '#8D93AB' '#A31ACB' '#00C3FF' '#FFC700' '#EE4E4E' --plotType lines"
+
+########H3K27ac########
+SlurmEasy -t 10 "computeMatrix reference-point -R /data/akhtar/suny/HSV1/TE_project/HSV1/GSE174759/CHIP_seq/new_14h.snakepipes.out/MACS2/SRR14605772_DUX4CHIP_14hpi_yes.filtered.BAM_summits.bed -S /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K27ac_HSV1_1hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K27ac_HSV1_2hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K27ac_HSV1_4hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K27ac_HSV1_8hpi_merged.bw --missingDataAsZero --skipZeros -p 50 -a 1000 -b 1000 -out HSV1_DUX4binding_H3K27ac.gz -bs 5 && plotProfile -m HSV1_DUX4binding_H3K27ac.gz -o HSV1_DUX4binding_H3K27ac.pdf --samplesLabel 1hpi 2hpi 4hpi 8hpi --regionsLabel DUX4binding --perGroup --legendLocation upper-left --plotWidth 5 --plotHeight 15 --colors '#A31ACB' '#00C3FF' '#FFC700' '#EE4E4E' --plotType lines"
+
+####H3K4me3#######
+SlurmEasy -t 10 "computeMatrix reference-point -R /data/akhtar/suny/HSV1/TE_project/HSV1/GSE174759/CHIP_seq/new_14h.snakepipes.out/MACS2/SRR14605772_DUX4CHIP_14hpi_yes.filtered.BAM_summits.bed -S /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K4me3_HSV1_1hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K4me3_HSV1_2hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K4me3_HSV1_4hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K4me3_HSV1_8hpi_merged.bw --missingDataAsZero --skipZeros -p 50 -a 1000 -b 1000 -out H3K4me3_DUX4binding.gz -bs 5 && plotProfile -m H3K4me3_DUX4binding.gz -o H3K4me3_DUX4binding.pdf --samplesLabel 1hpi 2hpi 4hpi 8hpi --regionsLabel H3K4me3_DUX4binding --perGroup --legendLocation upper-left --plotWidth 5 --plotHeight 15 --colors '#A31ACB' '#00C3FF' '#FFC700' '#EE4E4E' --plotType lines"
+
+####H3K27me3#######
+SlurmEasy -t 10 "computeMatrix reference-point -R /data/akhtar/suny/HSV1/TE_project/HSV1/GSE174759/CHIP_seq/new_14h.snakepipes.out/MACS2/SRR14605772_DUX4CHIP_14hpi_yes.filtered.BAM_summits.bed -S /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K27me3_HSV1_1hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K27me3_HSV1_2hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K27me3_HSV1_4hpi_merged.bw /data/akhtar/suny/HSV1/TE_project/HSV1/epi_HSV1_monocyte/human_DNAmapping.files.out/bamCoverage/filtered.seq_depth_norm.bw/H3K27me3_HSV1_8hpi_merged.bw --missingDataAsZero --skipZeros -p 50 -a 1000 -b 1000 -out H3K27me3_DUX4binding.gz -bs 5 && plotProfile -m H3K27me3_DUX4binding.gz -o H3K27me3_DUX4binding.pdf --samplesLabel 1hpi 2hpi 4hpi 8hpi --regionsLabel H3K27me3_DUX4binding --perGroup --legendLocation upper-left --plotWidth 5 --plotHeight 15 --colors '#A31ACB' '#00C3FF' '#FFC700' '#EE4E4E' --plotType lines"
+
+
+
 
 

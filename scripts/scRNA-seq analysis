@@ -3,7 +3,6 @@
 #############MCV patients analysis##############
 ############# mapping to hg38 with MCV genome by snakepipes#############
 cd /path/to/data/ && module load snakePipes/2.7.2
-
 scRNAseq -j 20 -i /path/to/data/ -o snakepipes.out --myKit 10Xv3 --STARsoloCoords 1,16,17,12 hg38_MCV  
 
 ########### downstream analysis ##############

@@ -1,0 +1,61 @@
+```{r, include=FALSE, echo = FALSE, warning=FALSE}
+suppressPackageStartupMessages({
+    library(ComplexHeatmap)
+    library(dplyr)
+    library(stringr)
+    library(ggplot2)
+})
+```
+
+
+```{r, cache=FALSE}
+outpath = "./"rut = Read_Rutkowski_FeatureCounts()
+```
+
+```{r}
+zygo = read.table("./data/zygotic_expression.tsv", sep="\t")
+hela = read.table("./data/hela_expression.tsv", sep="\t")
+```
+
+
+
+# ---------------------------------------------------------------------------- #
+# Zygotic Heatmap
+
+```{r}
+col = circlize::colorRamp2(breaks = c(-3,0,3), colors=c('cornflowerblue','white','firebrick'))
+
+clustering_methods = c("ward.D2","single","complete","average","median")
+lapply(clustering_methods, function(clustering_method){
+
+    message(clustering_method)
+    h1 = Heatmap(as.matrix(matz), col=col, cluster_columns=FALSE, 
+                cluster_rows      = TRUE,
+                show_row_names    = FALSE,
+                show_column_names = TRUE,
+                clustering_method_rows = clustering_method,
+                row_title_gp = gpar(fontsize = 8),
+                column_title_gp = gpar(fontsize = 8),
+                column_title = "Zygotic activation",
+                name         = "Zygotic activation",
+                show_row_dend = FALSE
+    )
+
+    h2 = Heatmap(as.matrix(hela), col = col, cluster_columns=FALSE, cluster_rows=TRUE,
+                show_row_names    = FALSE,
+                show_column_names = TRUE,
+                clustering_method_rows = clustering_method,
+                row_title_gp = gpar(fontsize = 8),
+                column_title_gp = gpar(fontsize = 8),
+                column_title = "HSV1 infection",
+                name         = "HSV1 infection",
+                show_row_dend = FALSE
+    )
+    pdf(file.path(outpath_zygotic, paste0("Heatmap-DUX4_Zygotic_Gene-",clustering_method,".pdf")), width = 4, height = 5)
+    draw(h1+h2)
+    draw(h2+h1)
+    dev.off()
+
+})
+```
+

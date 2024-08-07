@@ -1,0 +1,56 @@
+
+```{r, include=FALSE, echo = FALSE, warning=FALSE}
+suppressPackageStartupMessages({
+    library(data.table)
+    library(dplyr)
+    library(stringr)
+    library(ggplot2)
+    library(ggrepel)
+})
+```
+
+```{r}
+outpath = "./"
+
+```
+
+```{r}
+res = read.table("./data/expression_hap1-hsv1-duxko.tsv", sep="\t", header=TRUE)
+```
+
+
+# ----------------------------------------------------------------------------------- #
+# ----------------------------------------------------------------------------------- #
+
+
+```{r}
+
+time = "8h"        
+gg = res %>% 
+        dplyr::select(gene_name, contains(time)) %>% 
+        dplyr::select(-contains("mean")) %>% 
+        setnames(c("gene_name","lfc_ko", "padj_ko","diff_ko","lfc_wt","padj_wt","diff_wt")) %>%
+        mutate(color = diff_ko == "Up" | diff_wt == "Up") %>%
+        {
+        ggplot(data = ., aes(
+            lfc_ko, lfc_wt)
+        ) +
+        geom_point(color="lightgray") +
+        geom_point(data = subset(., diff_ko != "No"), color="darkgray") +
+        geom_point(data = subset(., diff_wt != "No"), color="darkgray") +
+        geom_abline(slope = 1, linewidth = .5) +
+        geom_abline(slope = 1, linewidth = .5, intercept = c(-1,1), linetype = 2) +
+        geom_hline(yintercept = 0) +
+        # geom_hline(yintercept = c(-1,1), linetype = 2, linewidth = .5) +
+        geom_vline(xintercept = 0) +
+        # geom_vline(xintercept = c(-1,1), linetype = 2, linewidth = .5) +
+        globals$theme +
+        xlab(paste(time, "log2 KO Inf / Mock")) +
+        ylab(paste(time, "log2 WT Inf / Mock")) +
+        geom_text_repel(data = . %>% subset(color)  , aes(label = gene_name), size=1, max.overlaps = 20) +
+        geom_point(data = . %>% subset(color), color="firebrick") +
+        xlim(-2,9) +
+        ylim(-2,9)
+    }
+ggsave(file.path(outpath, DateNamer(paste0("scatter-KO_inf_mock-WT_inf_mock-square-",time,".png"))), gg, width = 5, height = 4)
+```

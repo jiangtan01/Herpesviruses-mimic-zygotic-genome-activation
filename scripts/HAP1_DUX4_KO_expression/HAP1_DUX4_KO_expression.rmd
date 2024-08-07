@@ -52,5 +52,5 @@ gg = res %>%
         xlim(-2,9) +
         ylim(-2,9)
     }
-ggsave(file.path(outpath, DateNamer(paste0("scatter-KO_inf_mock-WT_inf_mock-square-",time,".png"))), gg, width = 5, height = 4)
+ggsave(file.path(outpath, paste0("scatter-KO_inf_mock-WT_inf_mock-square-",time,".png")), gg, width = 5, height = 4)
 ```

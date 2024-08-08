@@ -15,6 +15,7 @@ outpath = "./"
 ```
 
 ```{r}
+# reads in the expression of duxko hap1 expression
 res = read.table("./data/expression_hap1-hsv1-duxko.tsv", sep="\t", header=TRUE)
 ```
 
@@ -24,7 +25,7 @@ res = read.table("./data/expression_hap1-hsv1-duxko.tsv", sep="\t", header=TRUE)
 
 
 ```{r}
-
+# Scatterplot of the lfc in mock and hsv1 infected wt and ko cells
 time = "8h"        
 gg = res %>% 
         dplyr::select(gene_name, contains(time)) %>% 

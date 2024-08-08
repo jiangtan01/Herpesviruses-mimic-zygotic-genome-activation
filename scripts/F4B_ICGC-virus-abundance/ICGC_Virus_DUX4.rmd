@@ -1,0 +1,29 @@
+```{r}
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(stringr)
+```
+
+```{r}
+outpath = "./"
+```
+
+### Input
+```{r}
+tab = read.table("./data/icgc_dux_score.tsv", sep="\t", header=TRUE)
+```
+
+
+### Plots
+
+```{r}
+gg = tab %>% 
+        filter(!is.na(NCBI_taxname)) %>% {
+        ggplot(data = ., aes(log10(pmer), score, color = project_code)) +
+        geom_point() +
+        globals$theme+
+        geom_text_repel(data =. %>% arrange(-score) %>% head(25), aes(label = NCBI_taxname), size=1.5)
+    }
+ggsave(file.path(outpath, paste0("scatter-pmer-score-sel.pdf")), width = 6, height = 4)
+```

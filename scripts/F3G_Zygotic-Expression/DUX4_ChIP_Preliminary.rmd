@@ -8,11 +8,13 @@ suppressPackageStartupMessages({
 ```
 
 
+
 ```{r, cache=FALSE}
-outpath = "./"rut = Read_Rutkowski_FeatureCounts()
+outpath = "./"
 ```
 
 ```{r}
+# reads in the zygotic expression and the hela dataset
 zygo = read.table("./data/zygotic_expression.tsv", sep="\t")
 hela = read.table("./data/hela_expression.tsv", sep="\t")
 ```
@@ -23,6 +25,7 @@ hela = read.table("./data/hela_expression.tsv", sep="\t")
 # Zygotic Heatmap
 
 ```{r}
+# Plots the expression matrices
 col = circlize::colorRamp2(breaks = c(-3,0,3), colors=c('cornflowerblue','white','firebrick'))
 
 clustering_methods = c("ward.D2","single","complete","average","median")

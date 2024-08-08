@@ -11,6 +11,7 @@ outpath = "./"
 
 ### Input
 ```{r}
+# reads in merged ICGC virus quantification and DUX4 target gene score
 tab = read.table("./data/icgc_dux_score.tsv", sep="\t", header=TRUE)
 ```
 
@@ -18,6 +19,7 @@ tab = read.table("./data/icgc_dux_score.tsv", sep="\t", header=TRUE)
 ### Plots
 
 ```{r}
+# Creates the scatterplot of the virus quantity Vs the target gene score
 gg = tab %>% 
         filter(!is.na(NCBI_taxname)) %>% {
         ggplot(data = ., aes(log10(pmer), score, color = project_code)) +

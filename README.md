@@ -25,7 +25,7 @@ Accompanying sequencing data is available in the GEO of this paper.
 
 ## the installation of snakePipes2.7.2
 
-for the mapping of Bulk RNA-Seq, CHIP-seq, CUT&Run and single cell RNA-seq analysis, all of them did by the pipeline the version of snakePipes2.7.2 or 2.2.3
+for the mapping of Bulk RNA-Seq, CHIP-seq and single cell RNA-seq analysis, all of them did by the pipeline snakePipes, the version used 2.7.2 or 2.2.3
 
 for the installation of snakePipes, you need to install either miniconda or anaconda first. More detail please check the introduction of snakePipes from MPI: https://snakepipes.readthedocs.io/en/stable/content/setting_up.html#installing-snakepipes
 

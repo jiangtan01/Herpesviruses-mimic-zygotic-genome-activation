@@ -52,7 +52,7 @@ ChIP-seq -d /path/to/snakepipes.out -j 20 hg38 /path/to/chip_config.yaml
 ```  
 single cell RNA-seq analysis for  Merkel cell carcinoma tumor patient, data from GEO: GSE226438
 ```diff
-cd /path/to/data/ && module load snakePipes/2.7.2
+cd /path/to/data/ && conda activate snakePipes/2.7.2
 
 scRNAseq -j 20 -i /path/to/data/GSE226438 -o snakepipes.out --myKit 10Xv3 --STARsoloCoords 1,16,17,12 hg38_MCV  
 ```

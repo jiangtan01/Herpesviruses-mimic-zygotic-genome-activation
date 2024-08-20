@@ -25,7 +25,7 @@ Accompanying sequencing data is available in the GEO of this paper.
 
 ## the installation of snakePipes2.7.2
 
-for the mapping of Bulk RNA-Seq, CHIP-seq and single cell RNA-seq analysis, all of them did by the pipeline snakePipes, the version used 2.7.2 or 2.2.3
+for the mapping of Bulk RNA-Seq, CHIP-seq and single cell RNA-seq analysis, all of them did by the pipeline snakePipes. The version used 2.7.2 or 2.2.3
 
 for the installation of snakePipes, you need to install either miniconda or anaconda first. More detail please check the introduction of snakePipes from MPI: https://snakepipes.readthedocs.io/en/stable/content/setting_up.html#installing-snakepipes
 
@@ -34,7 +34,7 @@ the snakePipes2.7.2 install code is:
 conda create -n snakePipes -c mpi-ie -c conda-forge -c bioconda snakePipes2.7.2
 ```
 
-you can run it on a linux system of workstation, typicall install time may take several hours, the expected run time  depends on the size of different input fastq file and different jobs. Typically from several hours to several days. 
+you can run it on a linux system of workstation, typicall install time may take several hours. The expected run time depends on the size of different input fastq file and different jobs. Typically need from several hours to several days. 
   
 ## example for the usage of snakePipes
 

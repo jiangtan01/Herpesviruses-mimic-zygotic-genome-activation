@@ -36,14 +36,12 @@ HSV1_counts$HSV1_8hpi=rowMeans(HSV1_counts[,1:2])
 HSV1_counts$PAA_HSV1_8hpi=rowMeans(HSV1_counts[,3:4])
 HSV1_counts=HSV1_counts[,6:7]
 HSV1_counts.merge= data.frame(HSV1_genes = c('ICP0', 'ICP4'),
-                              HSV1_8hpi = c(23.08+38.4, 4.73+6.62),
+                              
                               PAA_HSV1_8hpi = c(0.835+2.088, 0.418+2.227))
 
 rownames(HSV1_counts.merge) = HSV1_counts.merge$HSV1_genes
 HSV1_counts.merge = HSV1_counts.merge[,2:3]
-
 dux4oe_counts.HSV1merge = rbind(dux4oe_counts,HSV1_counts.merge)
-
 dux4oe_counts.HSV1merge <- log2(dux4oe_counts.HSV1merge + 1)
 colnames(dux4oe_counts.HSV1merge)=c("HSV1_8hpi","PAA_HSV1_8hpi")
 rowname_order=c("DUX4","DUXA","ZSCAN4","ZSCAN5C","TRIM43","TRIM43B","TRIM48","TRIM49","TRIM49B","TRIM49C","TRIM72","FRG2B","FRG2C","RFPL4A","RFPL4AL1","GADD45G","PRAMEF2","ICP0","ICP4")
